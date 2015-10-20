@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace Polynomial
 {
-    public class Polynomial <T> where T : IComparable<T>
+    public class Polynomial
     {
-        private T[] coeff;
+        private double[] coeff;
         private int dim;
         readonly char variable;
 
         public Polynomial()
         {
             dim = 1;
-            coeff = new T [dim - 1];
+            coeff = new double[dim - 1];
             variable = 'x';
-            coeff[0] = default(T);
+            coeff[0] = default(double);
         }
 
-        public Polynomial(params T[] arr) : this()
+        public Polynomial(params double[] arr) : this()
         {
             dim = arr.Length;
             coeff = arr;
@@ -34,7 +34,7 @@ namespace Polynomial
                 throw new ArgumentOutOfRangeException("The dimension must be greater than 0.");
         }
 
-        public Polynomial(char symbol, params T[] arr) : this(arr)
+        public Polynomial(char symbol, params double[] arr) : this(arr)
         {
             variable = symbol;
         }
@@ -50,7 +50,7 @@ namespace Polynomial
                 return false;
             if (obj.GetType() != this.GetType())
                 return false;
-            Polynomial<T> pol = (Polynomial<T>)obj;
+            Polynomial pol = (Polynomial)obj;
             if (pol.dim != this.dim)
                 return false;
 
@@ -68,14 +68,35 @@ namespace Polynomial
             return base.GetHashCode();
         }
 
-        public static bool operator ==(Polynomial<T> pol1, Polynomial<T> pol2)
+        public static bool operator ==(Polynomial pol1, Polynomial pol2)
         {
             return pol1.Equals(pol2);
         }
 
-        public static bool operator !=(Polynomial<T> pol1, Polynomial<T> pol2)
+        public static bool operator !=(Polynomial pol1, Polynomial pol2)
         {
             return pol1.Equals(pol2);
         }
+
+        public static Polynomial operator +(Polynomial pol1, Polynomial pol2)
+        {
+            if (pol1 == null & pol2 == null)
+                return null;
+            if (pol1 == null)
+                return pol2;
+            if (pol2 == null)
+                return pol1;
+            if (pol1.variable != pol2.variable)//what exeption should I throw here?
+                throw new NotImplementedException();
+
+            int d = Math.Max(pol1.dim, pol2.dim);
+            Polynomial result = new Polynomial(d, pol1.variable);
+            for (int i = 0; i < d; i++)
+            {
+                result.coeff[i] = pol1.coeff[i] + pol2.coeff[i];
+            }
+            return result;
+        }
+
     }
 }
