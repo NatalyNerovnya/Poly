@@ -67,5 +67,15 @@ namespace Polynomial
         {
             return base.GetHashCode();
         }
+
+        public static bool operator ==(Polynomial<T> pol1, Polynomial<T> pol2)
+        {
+            return pol1.Equals(pol2);
+        }
+
+        public static bool operator !=(Polynomial<T> pol1, Polynomial<T> pol2)
+        {
+            return pol1.Equals(pol2);
+        }
     }
 }
