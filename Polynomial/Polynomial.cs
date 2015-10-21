@@ -154,6 +154,25 @@ namespace Polynomial
 
         }
 
+        public static Polynomial operator *(Polynomial pol1, Polynomial pol2)
+        {
+            if (pol1 == null || pol2 == null)
+                throw new ArgumentNullException();
+
+            if (pol1.variable != pol2.variable)//what exeption should I throw here?
+                throw new NotImplementedException();
+
+            int n = pol1.dim + pol2.dim - 1;
+            double[] prod = new double[n];
+            for (int i = 0; i < pol1.dim; i++)
+            {
+                for (int j = 0; j < pol2.dim; j++)
+                {
+                    prod[i + j] += pol1.coeff[i] * pol2.coeff[j];
+                }
+            }
+            return new Polynomial(pol1.variable, prod);
+        }
 
 
 
