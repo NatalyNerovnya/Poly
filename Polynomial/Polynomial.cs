@@ -6,149 +6,114 @@ using System.Threading.Tasks;
 
 namespace Polynomial
 {
-    public class Polynomial
-    {
-        private double[] coeff;
+    public class Polynomial : ICloneable, IEquatable<Polynomial>//перегрузить мтеоды операций с именами => изменить опертаоры -,+
+    {//Провеерять элементы  на нулевые
+        private readonly double[] coeff;
         private int dim;
-        readonly char variable;
 
+        public Polynomial() { }
 
-        public Polynomial()
+        public Polynomial(params double[] arr)
         {
-            dim = 1;
-            coeff = new double[dim - 1];
-            variable = 'x';
-            coeff[0] = default(double);
-        }
-
-        public Polynomial(params double[] arr) : this()
-        {
+            if (arr == null) throw new ArgumentNullException();
             dim = arr.Length;
-            coeff = arr;
+            Array.Copy(coeff, arr, dim);
         }
 
-        public Polynomial(int d) : this()
+        public double this[int i]
         {
-            if (d > 0)
-                dim = d;
-            else
-                throw new ArgumentOutOfRangeException("The dimension must be greater than 0.");
+            get
+            {
+                return coeff[i];
+            }
+            set
+            {
+                coeff[i] = value;
+            }
         }
 
-        public Polynomial(char symbol, params double[] arr) : this(arr)
+        public bool Equals(Polynomial other)
         {
-            variable = symbol;
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            DeleteZerosInTheEnd();
+            other.DeleteZerosInTheEnd();
+            if (other.dim != this.dim) return false;
+
+            for (int i = 0; i < dim; i++)
+                if (this[i].CompareTo(other[i]) != 0)
+                    return false;
+            return true;
         }
-
-        public Polynomial(int d, char symbol) : this(d)
-        {
-            variable = symbol;
-        }
-
-
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
-                return false;
-            if (obj.GetType() != this.GetType())
-                return false;
-            Polynomial pol = (Polynomial)obj;
-            if (pol.dim != this.dim)
-                return false;
-
-            for (int i = 0; i < dim; i++)
-                if (coeff[i].CompareTo(pol.coeff[i]) == 0)
-                    continue;
-                else
-                    return false;
-
-            return true;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Polynomial) obj);
         }
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            string result = "" + coeff[0];
-            for (int i = 1; i < dim; i++)
+            unchecked
             {
-                if (coeff[i] > 0)
-                    result += " + " + coeff[i] + variable + "^" + i;
-                else if (coeff[i] < 0)
-                    result += " " + coeff[i] + variable + "^" + i;
-                else
-                    continue;
+                return ((coeff != null ? coeff.GetHashCode() : 0)*397) ^ dim;
             }
-            result += " = 0";
-            return result;
         }
-
 
 
         public static bool operator ==(Polynomial pol1, Polynomial pol2)
         {
+            if (ReferenceEquals(pol1, pol2)) return true;
+            if (ReferenceEquals(pol1, null)) return false;
             return pol1.Equals(pol2);
         }
 
         public static bool operator !=(Polynomial pol1, Polynomial pol2)
         {
-            return pol1.Equals(pol2);
+            if (ReferenceEquals(pol1, pol2)) return true;
+            if (ReferenceEquals(pol1, null)) return false;
+            return !pol1.Equals(pol2);
         }
 
         public static Polynomial operator +(Polynomial pol1, Polynomial pol2)
         {
-            if (pol1 == null & pol2 == null)
-                return null;
-            if (pol1 == null)
-                return pol2;
-            if (pol2 == null)
-                return pol1;
-            if (pol1.variable != pol2.variable)//what exeption should I throw here?
-                throw new NotImplementedException();
+            if (pol1 == null || pol2 == null)
+                throw new ArgumentNullException();
 
             int d = Math.Max(pol1.dim, pol2.dim);
-            Polynomial result = new Polynomial(d, pol1.variable);
+
+            Polynomial result = new Polynomial();
             for (int i = 0; i < d; i++)
             {
-                result.coeff[i] = pol1.coeff[i] + pol2.coeff[i];
+                result[i] = pol1[i] + pol2[i];
             }
             return result;
         }
 
+        public static Polynomial operator -(Polynomial pol)
+        {
+            if (pol == null )
+                throw new ArgumentNullException();
+            return pol * (-1);
+        }
+
         public static Polynomial operator -(Polynomial pol1, Polynomial pol2)
         {
-            if (pol1 == null & pol2 == null)
-                return null;
-            if (pol1 == null)
-                return pol2;
-            if (pol2 == null)
-                return pol1;
-            if (pol1.variable != pol2.variable)//what exeption should I throw here?
-                throw new NotImplementedException();
-
-            int d = Math.Max(pol1.dim, pol2.dim);
-            Polynomial result = new Polynomial(d, pol1.variable);
-            for (int i = 0; i < d; i++)
-            {
-                result.coeff[i] = pol1.coeff[i] - pol2.coeff[i];
-            }
-            return result;
+            if (pol1 == null|| pol2 == null)
+                throw new ArgumentNullException();
+            return pol1 + (-pol2);
         }
 
         public static Polynomial operator *(Polynomial pol, double x)
         {
             if (pol == null)
-                return null;
-            if (x == 0)
-                return null;
-            Polynomial result = new Polynomial(pol.variable, pol.dim);
+                throw new ArgumentNullException();
+            Polynomial result = new Polynomial(pol.dim);
             for (int i = 0; i < result.dim; i++)
             {
-                result.coeff[i] = pol.coeff[i] * x;
+                result[i] = pol[i] * x;
             }
             return result;
 
@@ -159,8 +124,6 @@ namespace Polynomial
             if (pol1 == null || pol2 == null)
                 throw new ArgumentNullException();
 
-            if (pol1.variable != pol2.variable)//what exeption should I throw here?
-                throw new NotImplementedException();
 
             int n = pol1.dim + pol2.dim - 1;
             double[] prod = new double[n];
@@ -168,21 +131,32 @@ namespace Polynomial
             {
                 for (int j = 0; j < pol2.dim; j++)
                 {
-                    prod[i + j] += pol1.coeff[i] * pol2.coeff[j];
+                    prod[i + j] += pol1[i] * pol2[j];
                 }
             }
-            return new Polynomial(pol1.variable, prod);
+            return new Polynomial(prod);
         }
 
 
-
-        private Polynomial Clone(Polynomial pol)
+        public Polynomial Clone()
         {
-            if (pol == null)
-                return null;
-
-            return new Polynomial(pol.variable, pol.coeff);
+            return new Polynomial(this.coeff);
         }
 
+        object ICloneable.Clone()
+        {
+            return Clone();
+         }
+
+        private void DeleteZerosInTheEnd()
+        {
+            for (int i = dim; i >= 0; i++)
+            {
+                if (this[i] == 0)
+                {
+                    dim--;
+                }
+            }
+        }
     }
 }
