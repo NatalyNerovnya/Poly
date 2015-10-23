@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Polynomial
 {
-    public class Polynomial : ICloneable, IEquatable<Polynomial>//перегрузить мтеоды операций с именами => изменить опертаоры -,+
+    public class Polynomial : ICloneable, IEquatable<Polynomial>// изменить опертаоры -,+
     {//Провеерять элементы  на нулевые
         private readonly double[] coeff;
         private int dim;
@@ -31,6 +31,8 @@ namespace Polynomial
                 coeff[i] = value;
             }
         }
+
+
 
         public bool Equals(Polynomial other)
         {
@@ -62,7 +64,7 @@ namespace Polynomial
             }
         }
 
-
+#region operators
         public static bool operator ==(Polynomial pol1, Polynomial pol2)
         {
             if (ReferenceEquals(pol1, pol2)) return true;
@@ -82,12 +84,14 @@ namespace Polynomial
             if (pol1 == null || pol2 == null)
                 throw new ArgumentNullException();
 
+            pol1.DeleteZerosInTheEnd();
+            pol2.DeleteZerosInTheEnd();
             int d = Math.Max(pol1.dim, pol2.dim);
 
-            Polynomial result = new Polynomial();
+            Polynomial result = pol1;
             for (int i = 0; i < d; i++)
             {
-                result[i] = pol1[i] + pol2[i];
+                result[i] += pol2[i];
             }
             return result;
         }
@@ -119,6 +123,11 @@ namespace Polynomial
 
         }
 
+        public static Polynomial operator *(double x, Polynomial pol)
+        {
+            return pol * x;
+        }
+
         public static Polynomial operator *(Polynomial pol1, Polynomial pol2)
         {
             if (pol1 == null || pol2 == null)
@@ -137,6 +146,32 @@ namespace Polynomial
             return new Polynomial(prod);
         }
 
+        public static Polynomial Add (Polynomial pol1, Polynomial pol2)
+        {
+            return pol1 + pol2;
+        }
+
+        public static Polynomial Subtract (Polynomial pol1, Polynomial pol2)
+        {
+            return pol1 - pol2;
+        }
+
+        public static Polynomial Multiply(Polynomial pol1, Polynomial pol2)
+        {
+            return pol1 * pol2;
+        }
+
+        public static Polynomial Multiply(Polynomial pol, double x)
+        {
+            return pol * x;
+        }
+
+        public static Polynomial Multiply(double x, Polynomial pol)
+        {
+            return pol * x;
+        }
+
+        #endregion
 
         public Polynomial Clone()
         {
