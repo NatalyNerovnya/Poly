@@ -17,18 +17,24 @@ namespace Polynomial
         {
             if (arr == null) throw new ArgumentNullException();
             dim = arr.Length;
-            Array.Copy(coeff, arr, dim);
+            coeff = new double[dim];
+            Array.Copy(arr, coeff, dim);
         }
 
         public double this[int i]
         {
             get
             {
-                return coeff[i];
+                if(i < dim)
+                    return coeff[i];
+                throw new IndexOutOfRangeException();
             }
             set
             {
-                coeff[i] = value;
+                if(i < dim)
+                    coeff[i] = value;
+                else
+                    throw new IndexOutOfRangeException();
             }
         }
 
@@ -86,12 +92,14 @@ namespace Polynomial
 
             pol1.DeleteZerosInTheEnd();
             pol2.DeleteZerosInTheEnd();
-            int d = Math.Max(pol1.dim, pol2.dim);
-
-            Polynomial result = pol1;
+            int d = Math.Min(pol1.dim, pol2.dim);
+            var result = pol1.dim >= pol2.dim ? pol1 : pol2;
             for (int i = 0; i < d; i++)
             {
-                result[i] += pol2[i];
+                checked
+                {
+                    result[i] = pol1[i] + pol2[i];
+                }
             }
             return result;
         }
@@ -185,7 +193,7 @@ namespace Polynomial
 
         private void DeleteZerosInTheEnd()
         {
-            for (int i = dim; i >= 0; i++)
+            for (int i = dim - 1; i >= 0; i--)
             {
                 if (this[i] == 0)
                 {
