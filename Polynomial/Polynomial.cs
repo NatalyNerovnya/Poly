@@ -59,7 +59,7 @@ namespace Polynomial
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Polynomial) obj);
+            return Equals((Polynomial)obj);
         }
 
         public override int GetHashCode()
@@ -142,7 +142,7 @@ namespace Polynomial
                 throw new ArgumentNullException();
 
 
-            int n = pol1.dim + pol2.dim - 1;
+            int n = pol1.dim + pol2.dim;
             double[] prod = new double[n];
             for (int i = 0; i < pol1.dim; i++)
             {
