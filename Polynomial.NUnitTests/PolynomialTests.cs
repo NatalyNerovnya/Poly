@@ -38,7 +38,7 @@ namespace Polynomial.NUnitTests
             get
             {
                 yield return new TestCaseData(new Polynomial(0, 1), null).Throws(typeof(ArgumentNullException));
-                yield return new TestCaseData(new Polynomial(1, 2), new Polynomial(1)).Returns(new Polynomial(1,2));
+                yield return new TestCaseData(new Polynomial(1, 2), new Polynomial(1)).Returns(new Polynomial(1, 2));
                 yield return new TestCaseData(new Polynomial(-4, -2, 0), new Polynomial(2, 3, 4, 5)).Returns(new Polynomial(-8, -16, -22, -28, -10));
                 //yield return new TestCaseData(new Polynomial(Double.MaxValue), new Polynomial(2)).Throws(typeof(OverflowException));
             }
@@ -56,8 +56,8 @@ namespace Polynomial.NUnitTests
             {
                 yield return new TestCaseData(null, 2).Throws(typeof(ArgumentNullException));
                 yield return new TestCaseData(new Polynomial(1, 2), 2).Returns(new Polynomial(2, 4));
-                //yield return new TestCaseData(new Polynomial(-4, -2, 3, 0), -2).Returns(new Polynomial(8, 4, -6));
-                //yield return new TestCaseData(new Polynomial(Double.MaxValue), new Polynomial(2)).Throws(typeof(OverflowException));
+                yield return new TestCaseData(new Polynomial(-4, -2, 3, 0), -2).Returns(new Polynomial(8, 4, -6));
+                //yield return new TestCaseData(new Polynomial(Double.MaxValue), 2).Throws(typeof(OverflowException));
             }
         }
 
@@ -77,7 +77,7 @@ namespace Polynomial.NUnitTests
                 yield return new TestCaseData(new Polynomial(1, 2, 3, 0, 0, 0)).Returns(true);
                 yield return new TestCaseData(new Polynomial(1, 2)).Returns(false);
                 yield return new TestCaseData(null).Returns(false);
-               // yield return new TestCaseData(new object()).Returns(false);
+                // yield return new TestCaseData(new object()).Returns(false);
             }
         }
 
@@ -87,7 +87,7 @@ namespace Polynomial.NUnitTests
             Polynomial pol1 = new Polynomial(1, 2, 3);
             return pol1.Equals(pol);
         }
-#endregion
+        #endregion
 
 
 
