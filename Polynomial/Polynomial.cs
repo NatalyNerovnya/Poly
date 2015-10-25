@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Polynomial
 {
-    public class Polynomial : ICloneable, IEquatable<Polynomial>// изменить опертаоры -,+
-    {//Провеерять элементы  на нулевые
+    public class Polynomial : ICloneable, IEquatable<Polynomial>
+    {
         private readonly double[] coeff;
         private int dim;
+
 
         public Polynomial() { }
 
@@ -70,7 +71,17 @@ namespace Polynomial
             }
         }
 
-#region operators
+        public Polynomial Clone()
+        {
+            return new Polynomial(this.coeff);
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        #region operators
         public static bool operator ==(Polynomial pol1, Polynomial pol2)
         {
             if (ReferenceEquals(pol1, pol2)) return true;
@@ -122,10 +133,13 @@ namespace Polynomial
         {
             if (pol == null)
                 throw new ArgumentNullException();
-            Polynomial result = new Polynomial(pol.dim);
+            var result = pol.Clone();
             for (int i = 0; i < result.dim; i++)
             {
-                result[i] = pol[i] * x;
+                checked
+                {
+                    result[i] = pol[i] * x; 
+                }
             }
             return result;
 
@@ -180,16 +194,6 @@ namespace Polynomial
         }
 
         #endregion
-
-        public Polynomial Clone()
-        {
-            return new Polynomial(this.coeff);
-        }
-
-        object ICloneable.Clone()
-        {
-            return Clone();
-         }
 
         private void DeleteZerosInTheEnd()
         {
