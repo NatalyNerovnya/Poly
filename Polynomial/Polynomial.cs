@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -112,6 +113,7 @@ namespace Polynomial
                     result[i] = pol1[i] + pol2[i];
                 }
             }
+            result.DeleteZerosInTheEnd();
             return result;
         }
 
@@ -141,6 +143,7 @@ namespace Polynomial
                     result[i] = pol[i] * x; 
                 }
             }
+            result.DeleteZerosInTheEnd();
             return result;
 
         }
@@ -165,7 +168,9 @@ namespace Polynomial
                     prod[i + j] += pol1[i] * pol2[j];
                 }
             }
-            return new Polynomial(prod);
+            Polynomial result = new Polynomial(prod);
+            result.DeleteZerosInTheEnd();
+            return result;
         }
 
         public static Polynomial Add (Polynomial pol1, Polynomial pol2)
@@ -204,6 +209,8 @@ namespace Polynomial
                     dim--;
                 }
             }
+            if (dim == 0)
+                 throw new NotImplementedException();
         }
     }
 }
