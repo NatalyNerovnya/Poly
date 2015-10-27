@@ -56,6 +56,7 @@ namespace Polynomial.NUnitTests
             {
                 yield return new TestCaseData(null, 2).Throws(typeof(ArgumentNullException));
                 yield return new TestCaseData(new Polynomial(1, 2), 2).Returns(new Polynomial(2, 4));
+                yield return new TestCaseData(new Polynomial(1, 2, 3), 0).Throws(typeof(NotImplementedException));
                 yield return new TestCaseData(new Polynomial(-4, -2, 3, 0), -2).Returns(new Polynomial(8, 4, -6));
                 //yield return new TestCaseData(new Polynomial(Double.MaxValue), 2).Throws(typeof(OverflowException));
             }
