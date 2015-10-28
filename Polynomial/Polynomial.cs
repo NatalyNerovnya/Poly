@@ -140,7 +140,7 @@ namespace Polynomial
             {
                 checked
                 {
-                    result[i] = pol[i] * x; 
+                    result[i] *= x; 
                 }
             }
             result.DeleteZerosInTheEnd();
