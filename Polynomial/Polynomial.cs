@@ -42,6 +42,8 @@ namespace Polynomial
 
         public override string ToString()
         {
+            if (this == null)
+                throw new ArgumentNullException();
             this.DeleteZerosInTheEnd();
             string result = "";
             if (this[0] != 0)
