@@ -9,7 +9,7 @@ namespace Polynomial
 {
     public class Polynomial : ICloneable, IEquatable<Polynomial>
     {
-        private readonly double[] coeff;
+        private readonly double[] coeff = {};
         private int dim;
 
 
@@ -40,7 +40,25 @@ namespace Polynomial
             }
         }
 
+        public override string ToString()
+        {
+            this.DeleteZerosInTheEnd();
+            string result = "";
+            if (this[0] != 0)
+                result = this[0] + " "; 
 
+            for (int i = 1; i < dim; i++)
+            {
+                if (this[i] != 0)
+                {
+                    if (this[i] > 0)
+                        result += "+ ";
+                    result += this[i] + "x^" + i + " ";
+                }
+            }
+            result += " = 0";
+            return result;
+        }
 
         public bool Equals(Polynomial other)
         {
@@ -173,6 +191,11 @@ namespace Polynomial
             return result;
         }
 
+        public static Polynomial Negate(Polynomial pol)
+        {
+            return -pol;
+        }
+
         public static Polynomial Add (Polynomial pol1, Polynomial pol2)
         {
             return pol1 + pol2;
@@ -209,8 +232,6 @@ namespace Polynomial
                     dim--;
                 }
             }
-            if (dim == 0)
-                 throw new NotImplementedException();
         }
     }
 }
