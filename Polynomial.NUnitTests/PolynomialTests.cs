@@ -19,7 +19,7 @@ namespace Polynomial.NUnitTests
                 yield return new TestCaseData(new Polynomial(0, 1), null).Throws(typeof(ArgumentNullException));
                 yield return new TestCaseData(new Polynomial(1, 2, 3), new Polynomial(2, 3, 4)).Returns(new Polynomial(3, 5, 7));
                 yield return new TestCaseData(new Polynomial(-4, -2, 0), new Polynomial(2, 3, 4, 5)).Returns(new Polynomial(-2, 1, 4, 5));
-                //yield return new TestCaseData(new Polynomial(Double.MaxValue), new Polynomial(1)).Throws(typeof(OverflowException));
+               // yield return new TestCaseData(new Polynomial(Double.MaxValue), new Polynomial(1)).Throws(typeof(OverflowException));
             }
         }
 
@@ -90,7 +90,23 @@ namespace Polynomial.NUnitTests
         }
         #endregion
 
+        #region ToString
+        public IEnumerable<TestCaseData> TestToStringData
+        {
+            get
+            {
+                yield return new TestCaseData().Returns("1 + 2x^1 + 3x^2 = 0");
+            }
+        }
 
+        [Test, TestCaseSource(nameof(TestToStringData))]
+        public string ToString_ReturnStringWithYield()
+        {
+            Polynomial pol = new Polynomial(1, 2, 3);
+            return pol.ToString();
+        }
+
+        #endregion
 
     }
 }
